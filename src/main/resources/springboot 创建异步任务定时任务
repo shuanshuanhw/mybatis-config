@@ -1,0 +1,12 @@
+1、
+@Component //开启扫描
+@Async  //异步。如果没有就是普通类，就不能完成并行执行动作。
+
+2、通过在@Async指定线程池名，来将异步任务交给线程池去管理
+
+3、@EnableScheduling：开启基于注解的定时任务 @Scheduled：定时任务
+4、
+    @Scheduled(cron = "0 * * * * MON-SAT")
+    public void hello(){
+        System.out.println("hello ... ");
+    }
