@@ -1,0 +1,54 @@
+1、为了达到解耦的目的，一个类应当只做一件事，例如，用户进行注册时，需要创建注册相关的类，来完成注册事务。但是，如果注册成功时，还需要发送验证邮件，以及手机校验码，很多人为了方便，直接在注册类中将发送邮件和发送短信的代码一并写入。这样做会导致后面维护的困难，耦合性高。我们可以通过事件发布来达到解耦的目的
+2、创建事件类，两种构造函数好像都可以，第一种在调用时第一个参数用this，目前不知为什么
+public class UserRegisterEvent extends ApplicationEvent {
+    private static final long serialVersionUID = -5481658020206295565L;
+    private User user;
+    //谁发布的这个事件，souce就是谁（对象）
+    public UserRegisterEvent(Object source, User user) {
+        super(source);
+        this.user = user;
+    }
+    public UserRegisterEvent(User user) {
+        super(user);
+        this.user = user;
+    }
+    public User getUser() {
+        return user;
+    }
+}
+3、建设事件发布者
+public class UserRegisterService implements ApplicationEventPublisherAware {
+
+    private ApplicationEventPublisher applicationEventPublisher;
+
+    public ApplicationEventPublisher getApplicationEventPublisher()
+    {
+        return this.applicationEventPublisher;
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.applicationEventPublisher = applicationEventPublisher;
+
+    }
+}
+4、创建事件监听者，监听到事件发布后，自动执行onApplicationEvent方法，所以该类需要有IOC来管理，类上要加@Component注解
+@Component
+public class EventListener implements ApplicationListener<UserRegisterEvent> {
+
+    @Override
+    public void onApplicationEvent(UserRegisterEvent event) {
+
+        //发邮件
+        System.out.println("正在发送邮件至： " + event.getUser().getEmail());
+
+        //发短信
+        System.out.println("正在发短信到： " + event.getUser());
+    }
+}
+
+5、调用
+userRegisterService.getApplicationEventPublisher().publishEvent(new UserRegisterEvent(this, user));
+userRegisterService.getApplicationEventPublisher().publishEvent(new UserRegisterEvent(user));
+
+6、目前理解到这个层面

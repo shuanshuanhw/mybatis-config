@@ -1,0 +1,21 @@
+1、默认情况下，插件MyBatis-Spring-Boot-Starter将进行如下配置：
+
+    自动检查Spring Boot的数据源配置并构建DataSource对象
+    通过SqlSessionFactoryBean使用数据源构建并注册SqlSessionFactory对象
+    从SqlSessionFactory中创建并注册一个SqlSessionTemplate实例，其实就是构建一个SqlSession对象
+    自动扫描接口映射器，并将这些映射器与SqlSessionTemplate实例进行关联，同时将它们注册到Spring容器中
+2、上述这些默认配置就是我们在原生集成MyBatis方式中做的事情，只不过在Spring Boot中通过插件MyBatis-Spring-Boot-Starter自动完成了。
+3、在Spring Boot中对MyBatis进行定制主要是指在Spring Boot的配置文件中（如：application.yaml）对MyBatis运行参数进行自定义配置（使用mybatis作为配置参数前缀）
+4、配置参数最终是通过mybatis-spring-boot-autoconfigure.jar加载和配置的。
+5、详细的配置参数列表请参考MyBatis配置官网：http://www.mybatis.org/mybatis-3/zh/configuration.html
+
+mybatis:
+    check-config-location: true                             # 是否检测MyBatis运行参数配置文件
+    config-location: classpath:/mybatis-config.xml          # 指定MyBatis运行参数配置文件位置
+    mapper-locations: classpath:/mapper/**/*.xml            # 注册XML映射器
+    type-aliases-package: test.springboot.model             # 配置Java类型包名
+    type-handlers-package: test.springboot.handlers         # 配置类型处理器包名
+    executor-type: SIMPLE                                   # 指定执行器类型
+    configuration:
+        default-fetch-size: 20
+        default-statement-timeout: 30

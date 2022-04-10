@@ -1,0 +1,31 @@
+1、加入依赖
+<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+</dependency>
+2、不要在单元测试中使用 Spring
+一旦在测试类中涉及容器类的注入，就必须先加载上下文，@SpringBootTest就是启动上下文的注解，但是这比较费时间
+这个测试在我电脑上的一个空 Spring 项目上运行大约需要 4.5 秒。
+但是一个好的单元测试只需要几毫秒。否则它会阻碍由测试驱动开发（TDD）思想推动的“测试/代码/测试”流程。但即使我们不采用 TDD，等待太长时间的测试也会破坏我们的注意力。
+
+3、使用普通 Mockito 模拟依赖项、使用 AssertJ 创建可读断言
+
+4、测试的类型
+1- 单元测试，一般面向方法，不启动上下文
+2- 集成测试，启动上下文
+3- 切片测试，介于单元测试和功能测试之间。涉及到的注解有 @WebMvcTest等。主要就是对于Controller的测试
+4- 功能测试，一般面向某个完整的业务功能，涉及到的注解有@SpringBootTest等，看起来像是对整个类的测试
+5- 系统测试
+6- 验收测试，验收测试的目的是确保软件准备就绪，按照项目合同、任务书、双方约定的验收依据文档，向软件购买都展示该软件系统满足原始需求。
+
+5、Spring Boot 2.2.0 版本开始引入 JUnit5 作为单元测试默认库, JUnit5作为最新版本的 JUnit框架, 它与之前版本的 JUnit框架有很大的不同
+JUnit5 = JUnitPlatform + JUnitJupiter + JUnitVintage
+JUnitPlatform: JUnitPlatform 是在 JVM 上启动测试框架的基础,不仅支持 JUnit自制的测试引擎,其它测试引擎也都可以接入.
+JUnitJupiter: JUnitJupiter 提供了JUnit5 的新的编程模型,是 JUnit5 新特性的核心.内部包含了一个测试引擎,用于在 JUnitPlatform 上运行.
+JUnitVintage: 由于 JUnit已经发展多年,为了照顾老的项目,JUnitVintage 提供了兼容 JUnit 4.x,JUnit 3.x 的测试引擎.
+注意：
+SpringBoot 2.4 以上版本移除了默认对 Vintage 的依赖.如果需要兼容 JUnit4.x 版本,需要自行引入（不能使用junit4的功能 @Test）
+
+6、org.junit.jupiter.api.Assertions包括着很多断言的静态方法
+

@@ -1,0 +1,21 @@
+1、Lambda表达式的本质
+在Java中，接口是不能实例化的，但是接口对象可以指向它的实现类对象。如果接口连实现对象都没有呢？那还可以使用匿名类的方式，如下:
+Fly fly = new Fly() {
+            @Override
+            public void fly(String name) {
+                System.out.println(name + "飞行");
+            }
+        };
+        fly.fly("张三");
+这么写有点不优雅，于是使用Lambda
+Fly fly = name -> System.out.println(name + "飞行");
+        fly.fly("张三");
+所以，这个Lambda接口要满足一个要求，就是只有一个未实现的方法
+可以在接口上加**@FunctionalInterface注解
+2、Lambda表达式的引用写法
+// 方法引用写法
+GreetingService greetingService = System.out::println;
+greetingService.sayMessage("hello world");
+println的功能就是把一个变量打印出来，并换行，在引用中，就相当于把println的功能套在接口未实现的那个方法上，所以应该是参数数量和类型要对得上才能用
+
+

@@ -1,0 +1,61 @@
+1、引入包，下面的包是针对springboot的
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.1.22</version>
+        </dependency>
+
+2、通过配置文件配置mybatis
+
+mybatis:
+  # 指定 mapper.xml 的位置
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  #扫描实体类的位置,在此处指明扫描实体类的包，在 mapper.xml 中就可以不写实体类的全路径名
+  type-aliases-package: net.biancheng.www.bean
+  configuration:
+    #默认开启驼峰命名法，可以不用设置该属性
+    map-underscore-to-camel-case: true
+
+3、在数据库在创建表，在程序中创建相应实体类
+
+4、创建 Mapper 接口
+
+// 当 mapper 接口较多时，我们可以在 Spring Boot 主启动类上使用 @MapperScan 注解扫描指定包下的 mapper 接口，而不再需要在每个 mapper 接口上都标注 @Mapper 注解。
+@Mapper
+public interface UserMapper {
+    //通过用户名密码查询用户数据
+    User getByUserNameAndPassword(User user);
+}
+
+5、创建 Mapper 映射文件
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mybatisconfig.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="User">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, user_id, user_name, password, email
+    </sql>
+    <!--根据用户名密码查询用户信息-->
+    <!--application.yml 中通过 type-aliases-package 指定了实体类的为了，因此-->
+    <select id="getByUserNameAndPassword" resultType="User">
+        select *
+        from user
+        where user_name = #{userName,jdbcType=VARCHAR}
+          and password = #{password,jdbcType=VARCHAR}
+    </select>
+</mapper>
+
+注意：
+使用 Mapper 进行开发时，需要遵循以下规则：
+mapper 映射文件中 namespace 必须与对应的 mapper 接口的完全限定名一致。
+mapper 映射文件中 statement 的 id 必须与 mapper 接口中的方法的方法名一致
+mapper 映射文件中 statement 的 parameterType 指定的类型必须与 mapper 接口中方法的参数类型一致。
+mapper 映射文件中 statement 的 resultType 指定的类型必须与 mapper 接口中方法的返回值类型一致。

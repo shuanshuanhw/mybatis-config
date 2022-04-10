@@ -1,0 +1,27 @@
+1、参数问题 mockMvc.perform(get("/users/{username}/{password}").param("username","shuanshuan").param("password","huangwei"))
+如果控制器使用对象接收前台的数据，那模拟器有两种处理，一种是用各个参数注入，一种是用APPLICATION_JSON，注入一个json格式的字符串，这个字符串由对象转换过来的
+
+GET ：
+1.路径参数 @PathVariable
+2.表单参数 @RequestParam
+POST：
+1.JSON请求体参数 @RequestBody @ModelAttribute
+使用@ModelAttribute注解的实体类接收前端发来的数据格式需要为"x-www-form-urlencoded"，@RequestBody注解的实体类接收前端的数据格式为JSON(application/json)格式。
+控制器使用@RequestBody接收参数，要使用.contentType(MediaType.APPLICATION_JSON).content(s))，s是json格式的字符串
+但是用@ModelAttribute可以不需要特别设定什么
+PUT：
+1.路径参数 @PathVariable
+2.表单参数 @RequestParam
+DELETE：
+1.路径参数 @PathVariable
+2.表单参数 @RequestParam
+
+2、示例
+1- 路径请求 mockMvc.perform(MockMvcRequestBuilders.请求方式("url/{path}",参数值)
+2- 表单请求 mockMvc.perform(MockMvcRequestBuilders.请求方式("url").param("键","值").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+3- JSON请求 mockMvc.perform(MockMvcRequestBuilders.请求方式，一般为POST("url").content(JSONObject.toJSONString(map)).contentType(.contentType(MediaType.APPLICATION_JSON))
+
+3、如果控制器返回json，在测试时，可以通过mvcResult.getResponse().getContentAsString()取得返回值
+4、可以参考https://cloud.tencent.com/developer/article/1435504
+5、mockMvc主要是可以启动上下文，模拟给值给控制器，来运行控制器，一些附加的判断功能，未必会用得到
+6、目前理解到这个层面
