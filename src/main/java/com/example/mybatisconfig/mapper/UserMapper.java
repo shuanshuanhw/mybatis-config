@@ -2,12 +2,13 @@ package com.example.mybatisconfig.mapper;
 
 
 import com.example.mybatisconfig.domain.User;
+import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 // 当 mapper 接口较多时，我们可以在 Spring Boot 主启动类上使用 @MapperScan 注解扫描指定包下的 mapper 接口，而不再需要在每个 mapper 接口上都标注 @Mapper 注解。
-@Mapper
+//@Mapper
 public interface UserMapper {
 
     //我们可以根据 SQL 的复杂程度，选择不同的方式来提高开发效率。
@@ -19,6 +20,8 @@ public interface UserMapper {
     //通过用户名密码查询用户数据
     User getByUserNameAndPassword1(User user);
 
+    @Select("select * from user")
+    Page<User> getUserList();
     //2、通过注解的方式
     @Select("select * from user where user_name = #{userName,jdbcType=VARCHAR} and password = #{password,jdbcType=VARCHAR}")
     User getByUserNameAndPassword(User user);
